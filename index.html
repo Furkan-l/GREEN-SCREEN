@@ -387,6 +387,21 @@
         pointer-events: none;
         transform: scale(0.85) translateY(-30px);
     }
+    #daily-film {
+        opacity: 1;
+        transform: scale(1);
+        max-height: 500px;
+        overflow: visible;
+        transition: opacity 0.4s cubic-bezier(.4,2,.3,1), transform 0.4s cubic-bezier(.4,2,.3,1), max-height 0.5s cubic-bezier(.4,2,.3,1);
+        will-change: opacity, transform, max-height;
+    }
+    #daily-film.closed {
+        opacity: 0;
+        transform: scale(0.95);
+        max-height: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -400,6 +415,13 @@
     <style>
     @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
     </style>
+    <!-- Bugünün Filmi Butonu ve Kartı (container'dan önce) -->
+    <div id="daily-film-toggle-wrapper" style="max-width:500px;margin:24px auto 0 auto;">
+      <button id="daily-film-toggle-btn" style="display:none;width:100%;padding:12px 0;background:#BFFF00;color:#193d1a;font-size:1.1em;font-weight:bold;border:none;border-radius:12px;box-shadow:0 2px 8px #BFFF0030;cursor:pointer;transition:background 0.2s;">Bugünün Filmi</button>
+      <div id="daily-film" class="closed" style="background:#1e3f1a;border-radius:16px;box-shadow:0 4px 24px rgba(124,252,0,0.18);padding:18px 18px 12px 18px;margin-top:8px;">
+        <div id="daily-film-card"></div>
+      </div>
+    </div>
     <div class="container">
         <div style="display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:24px;">
             <span style="display:inline-flex; align-items:center; justify-content:center;">
@@ -1106,6 +1128,85 @@
         if (favBox) favBox.classList.add('closed');
         if (recentBox) recentBox.classList.add('closed');
         if (dislikedBox) dislikedBox.style.display = 'none';
+    });
+  </script>
+  <script>
+    // Haftanın Filmi (Weekly suggestion) toggle butonlu ve favoriler mantığında açılıp kapanan fonksiyon
+    function getWeekNumber(d) {
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+        var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+        var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+        return d.getUTCFullYear() + '-' + weekNo; // ör: 2024-23
+    }
+    async function findRandomWeeklyFilm() {
+        const genres = ['Action','Comedy','Drama','Horror','Romance','Sci-Fi','Animation','Adventure','Thriller','Fantasy'];
+        for (let i = 0; i < 10; i++) {
+            const randomGenre = genres[Math.floor(Math.random()*genres.length)];
+            if (typeof fetchFilmByGenre === 'function') {
+                const films = await fetchFilmByGenre(randomGenre);
+                if (films.length > 0 && !films[0].trailerKey) {
+                    return films[0];
+                }
+            }
+        }
+        return null;
+    }
+    async function showWeeklyFilm() {
+        const weekKey = getWeekNumber(new Date());
+        let weekly = JSON.parse(localStorage.getItem('weeklyFilm') || '{}');
+        if (weekly.week !== weekKey) {
+            // Yeni hafta, fragmansız film bulana kadar dene (max 10 deneme)
+            const film = await findRandomWeeklyFilm();
+            if (film) {
+                weekly = { week: weekKey, film };
+                localStorage.setItem('weeklyFilm', JSON.stringify(weekly));
+            } else {
+                weekly = { week: weekKey, film: null };
+                localStorage.setItem('weeklyFilm', JSON.stringify(weekly));
+            }
+        }
+        // Buton ve kartı göster/gizle
+        const btn = document.getElementById('daily-film-toggle-btn');
+        btn.textContent = 'Haftanın Filmi';
+        const weeklyDiv = document.getElementById('daily-film');
+        const cardDiv = document.getElementById('daily-film-card');
+        if (weekly.film) {
+            btn.style.display = 'block';
+            cardDiv.innerHTML = `
+                <div style=\"display:flex;align-items:center;gap:16px;\">
+                    <img src=\"${weekly.film.Poster !== 'N/A' ? weekly.film.Poster : 'maxresdefault.jpg'}\" alt=\"${weekly.film.Title}\" style=\"width:70px;height:100px;object-fit:cover;border-radius:10px;box-shadow:0 2px 8px #BFFF0030;\">
+                    <div style=\"flex:1;\">
+                        <div style=\"font-weight:bold;color:#BFFF00;font-size:1.08em;\">${weekly.film.Title}</div>
+                        <div style=\"color:#fff;font-size:0.98em;\">${weekly.film.Year}</div>
+                        <div style=\"color:#ffcdd2;font-size:0.95em;\">${weekly.film.Genre}</div>
+                        <div style=\"color:#ffeaea;font-size:0.93em;line-height:1.3;\">${weekly.film.Plot}</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            btn.style.display = 'none';
+            cardDiv.innerHTML = '';
+            weeklyDiv.classList.add('closed');
+            return;
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        showWeeklyFilm().then(() => {
+            const btn = document.getElementById('daily-film-toggle-btn');
+            const weeklyDiv = document.getElementById('daily-film');
+            btn.onclick = function(e) {
+                e.stopPropagation();
+                weeklyDiv.classList.toggle('closed');
+            };
+            document.addEventListener('click', function(e) {
+                if (!weeklyDiv.classList.contains('closed')) {
+                    if (!weeklyDiv.contains(e.target) && e.target !== btn) {
+                        weeklyDiv.classList.add('closed');
+                    }
+                }
+            });
+        });
     });
   </script>
 </body>
