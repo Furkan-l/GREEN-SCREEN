@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Quiz | GreenScreen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #181818 60%, #193d1a 100%);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .quiz-container {
+      background: #1e3f1a;
+      box-shadow: 0 4px 24px rgba(124,252,0,0.18);
+      border-radius: 20px;
+      max-width: 420px;
+      width: 96vw;
+      margin: 48px auto 0 auto;
+      padding: 32px 24px 24px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    h1 {
+      color: #BFFF00;
+      font-size: 2.1em;
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+      font-weight: 900;
+      font-style: italic;
+      text-shadow: 0 2px 12px #43a04780;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #193d1a;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg,#7CFC00 60%,#BFFF00 100%);
+      border-radius: 8px;
+      transition: width 0.4s cubic-bezier(.4,2,.3,1);
+    }
+    .question {
+      font-size: 1.18em;
+      margin: 24px 0 12px 0;
+      color: #fff;
+      font-weight: 700;
+      min-height: 48px;
+      transition: opacity 0.4s;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 18px;
+      margin-top: 8px;
+    }
+    .option-btn {
+      background: #193d1a;
+      color: #BFFF00;
+      border: 2px solid #BFFF00;
+      border-radius: 10px;
+      padding: 13px 0;
+      font-size: 1.08em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.22s, color 0.22s, transform 0.18s;
+      box-shadow: 0 2px 8px #BFFF0030;
+      outline: none;
+      position: relative;
+    }
+    .option-btn.selected, .option-btn:active {
+      background: #BFFF00;
+      color: #193d1a;
+      transform: scale(1.04);
+      box-shadow: 0 4px 18px 0 #BFFF0070, 0 1.5px 8px #7CFC0040;
+    }
+    .option-btn:after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 0;
+      background: #BFFF00;
+      border-radius: 0 0 10px 10px;
+      transition: height 0.22s;
+      z-index: 1;
+    }
+    .option-btn.selected:after {
+      height: 6px;
+    }
+    #next-btn, #restart-btn, #home-btn {
+      margin-top: 18px;
+      padding: 12px 32px;
+      background: #43a047;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #43a04740;
+      transition: background 0.2s, color 0.2s;
+      margin-right: 8px;
+    }
+    #next-btn:hover, #restart-btn:hover, #home-btn:hover {
+      background: #BFFF00;
+      color: #193d1a;
+    }
+    .result {
+      margin-top: 24px;
+      background: #193d1a;
+      border-radius: 16px;
+      padding: 28px 12px 18px 12px;
+      color: #BFFF00;
+      font-size: 1.2em;
+      font-weight: bold;
+      box-shadow: 0 2px 8px #BFFF0030;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.7s cubic-bezier(.4,2,.3,1);
+    }
+    .result img {
+      width: 110px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px #BFFF0030;
+      margin-bottom: 14px;
+    }
+    .result .char-name {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #BFFF00;
+      margin-bottom: 6px;
+    }
+    .result .char-desc {
+      font-size: 1.05em;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .result .char-quote {
+      font-size: 1em;
+      color: #7CFC00;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @media (max-width: 500px) {
+      .quiz-container {
+        padding: 12px 2vw 14px 2vw;
+        margin-top: 12px;
+      }
+      h1 {
+        font-size: 1.2em;
+      }
+      .result img {
+        width: 80px;
+        height: 110px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Mini Quiz</h1>
+    <div class="progress-bar"><div class="progress" id="progress"></div></div>
+    <div id="quiz-area"></div>
+    <button id="next-btn" style="display:none;">Sonraki</button>
+    <button id="restart-btn" style="display:none;">Baştan Başla</button>
+    <button id="home-btn" style="display:none;">Ana Sayfa</button>
+  </div>
+  <script>
+    // 32 karakterli, 8 sorulu, 6 şıklı modern quiz
+    const questions = [
+      {
+        q: 'En çok hangi türde film izlersin?',
+        options: [
+          { text: 'Aksiyon/Macera', points: { spiderman:3, batman:2, johnwick:3, indiana:2, rocky:2, wonder:1, blackpanther:1, superman:1, bond:1, jules:1 } },
+          { text: 'Komedi', points: { deadpool:3, shrek:2, amelie:2, jack:2, forrest:1, buzz:1, joker:1, jules:1, vitocorleone:1, elsa:1 } },
+          { text: 'Bilim Kurgu/Fantastik', points: { neo:3, yoda:2, elsa:2, ironman:2, martymcfly:2, legolas:1, vader:1, leia:1, hermione:1, gollum:1 } },
+          { text: 'Gerilim/Korku', points: { joker:3, myers:3, gollum:2, thanos:2, vader:1, bond:1, batman:1, johnwick:1, shrek:1, jack:1 } },
+          { text: 'Dram', points: { forrest:3, amelie:2, vitocorleone:2, leia:2, katniss:1, superman:1, wonder:1, hermione:1, rocky:1, indiana:1 } },
+          { text: 'Animasyon', points: { buzz:3, elsa:2, shrek:2, wonder:1, jack:1, legolas:1, deadpool:1, martymcfly:1, joker:1, gollum:1 } }
+        ]
+      },
+      {
+        q: 'Film izlerken yanında ne olmalı?',
+        options: [
+          { text: 'Patlamış mısır', points: { deadpool:2, shrek:2, buzz:2, jack:2, forrest:2, amelie:2, joker:1, batman:1, neo:1, vitocorleone:1 } },
+          { text: 'Dostlarım', points: { spiderman:2, wonder:2, katniss:2, blackpanther:2, leia:2, ironman:2, johnwick:1, indiana:1, rocky:1, gollum:1 } },
+          { text: 'Kahve/Çay', points: { hermione:2, vitocorleone:2, yoda:2, bond:2, elsa:2, joker:1, shrek:1, superman:1, jules:1, thanos:1 } },
+          { text: 'Karanlık ve sessizlik', points: { vader:2, myers:2, gollum:2, thanos:2, batman:2, joker:2, neo:1, indiana:1, martymcfly:1, buzz:1 } },
+          { text: 'Ailem', points: { superman:2, forrest:2, amelie:2, wonder:2, katniss:2, vitocorleone:2, leia:1, elsa:1, shrek:1, rocky:1 } },
+          { text: 'Tek başıma', points: { neo:2, indiana:2, johnwick:2, martymcfly:2, legolas:2, gollum:2, joker:1, batman:1, myers:1, jules:1 } }
+        ]
+      },
+      {
+        q: 'Bir filmde seni en çok ne etkiler?',
+        options: [
+          { text: 'Kahramanlık ve fedakarlık', points: { spiderman:2, superman:2, wonder:2, blackpanther:2, katniss:2, batman:2, johnwick:1, indiana:1, rocky:1, leia:1 } },
+          { text: 'Zekice kurgulanmış senaryo', points: { hermione:2, neo:2, ironman:2, bond:2, yoda:2, vitocorleone:2, joker:1, elsa:1, shrek:1, gollum:1 } },
+          { text: 'Beklenmedik sürprizler', points: { joker:2, jack:2, gollum:2, jules:2, myers:2, indiana:2, deadpool:1, batman:1, thanos:1, buzz:1 } },
+          { text: 'Komik diyaloglar', points: { deadpool:2, shrek:2, amelie:2, forrest:2, buzz:2, jack:2, joker:1, johnwick:1, vitocorleone:1, elsa:1 } },
+          { text: 'Aşk ve dostluk', points: { amelie:2, leia:2, forrest:2, wonder:2, katniss:2, elsa:2, superman:1, blackpanther:1, shrek:1, rocky:1 } },
+          { text: 'Büyük savaşlar', points: { vader:2, thanos:2, blackpanther:2, legolas:2, johnwick:2, rocky:2, batman:2, indiana:1, katniss:1, bond:1 } }
+        ]
+      },
+      {
+        q: 'Favori film ortamın nedir?',
+        options: [
+          { text: 'Evde aileyle', points: { forrest:2, amelie:2, superman:2, wonder:2, katniss:2, vitocorleone:2, leia:1, elsa:1, shrek:1, rocky:1 } },
+          { text: 'Sinema salonunda', points: { hermione:2, ironman:2, batman:2, blackpanther:2, bond:2, elsa:2, joker:1, johnwick:1, indiana:1, buzz:1 } },
+          { text: 'Arkadaşlarla parti', points: { deadpool:2, shrek:2, jack:2, joker:2, buzz:2, jules:2, batman:1, forrest:1, amelie:1, vitocorleone:1 } },
+          { text: 'Gece tek başıma', points: { vader:2, myers:2, gollum:2, thanos:2, neo:2, johnwick:2, joker:1, batman:1, indiana:1, martymcfly:1 } },
+          { text: 'Doğada', points: { indiana:2, legolas:2, katniss:2, shrek:2, gollum:2, blackpanther:2, forrest:1, elsa:1, wonder:1, rocky:1 } },
+          { text: 'Kütüphane/kafe', points: { hermione:2, vitocorleone:2, yoda:2, amelie:2, leia:2, ironman:2, joker:1, superman:1, bond:1, jules:1 } }
+        ]
+      },
+      {
+        q: 'Bir film karakterinde aradığın en önemli özellik?',
+        options: [
+          { text: 'Cesaret', points: { spiderman:2, wonder:2, superman:2, blackpanther:2, katniss:2, johnwick:2, batman:1, indiana:1, rocky:1, leia:1 } },
+          { text: 'Zeka', points: { hermione:2, neo:2, ironman:2, yoda:2, vitocorleone:2, bond:2, joker:1, elsa:1, shrek:1, gollum:1 } },
+          { text: 'Mizah', points: { deadpool:2, shrek:2, amelie:2, jack:2, forrest:2, jules:2, joker:1, johnwick:1, vitocorleone:1, elsa:1 } },
+          { text: 'Gizem', points: { joker:2, vader:2, myers:2, gollum:2, thanos:2, batman:2, neo:1, indiana:1, martymcfly:1, bond:1 } },
+          { text: 'Liderlik', points: { wonder:2, blackpanther:2, leia:2, bond:2, vitocorleone:2, hermione:2, superman:1, batman:1, johnwick:1, rocky:1 } },
+          { text: 'Macera', points: { indiana:2, johnwick:2, martymcfly:2, rocky:2, legolas:2, buzz:2, shrek:1, gollum:1, joker:1, katniss:1 } }
+        ]
+      },
+      {
+        q: 'Hangi film repliği sana daha yakın?',
+        options: [
+          { text: '“Büyük güç, büyük sorumluluk getirir.”', points: { spiderman:2, superman:2, wonder:2, batman:2, johnwick:2, blackpanther:2, bond:1, jules:1, vitocorleone:1, elsa:1 } },
+          { text: '“Let it go!”', points: { elsa:2, amelie:2, shrek:2, buzz:2, martymcfly:2, jules:2, joker:1, johnwick:1, vitocorleone:1, batman:1 } },
+          { text: '“Ben senin babanım.”', points: { vader:2, joker:2, myers:2, gollum:2, thanos:2, bond:2, batman:1, johnwick:1, shrek:1, jack:1 } },
+          { text: '“Hayat bir kutu çikolataya benzer.”', points: { forrest:2, amelie:2, leia:2, katniss:2, vitocorleone:2, jack:2, joker:1, johnwick:1, elsa:1, shrek:1 } },
+          { text: '“I’m Batman.”', points: { batman:2, ironman:2, neo:2, indiana:2, rocky:2, legolas:2, joker:1, johnwick:1, vitocorleone:1, elsa:1 } },
+          { text: '“Wakanda forever!”', points: { blackpanther:2, wonder:2, katniss:2, leia:2, superman:2, yoda:2, joker:1, johnwick:1, vitocorleone:1, shrek:1 } }
+        ]
+      },
+      {
+        q: 'Bir filmde hangi rolü oynamak isterdin?',
+        options: [
+          { text: 'Süper kahraman', points: { spiderman:2, superman:2, wonder:2, batman:2, ironman:2, blackpanther:2, johnwick:1, indiana:1, rocky:1, leia:1 } },
+          { text: 'Kötü adam', points: { joker:2, vader:2, myers:2, gollum:2, thanos:2, bond:2, batman:1, johnwick:1, shrek:1, jack:1 } },
+          { text: 'Komik yan karakter', points: { deadpool:2, shrek:2, amelie:2, jack:2, forrest:2, buzz:2, joker:1, johnwick:1, vitocorleone:1, elsa:1 } },
+          { text: 'Bilge lider', points: { hermione:2, yoda:2, vitocorleone:2, leia:2, blackpanther:2, bond:2, superman:1, batman:1, johnwick:1, rocky:1 } },
+          { text: 'Maceracı', points: { indiana:2, johnwick:2, martymcfly:2, rocky:2, legolas:2, katniss:2, shrek:1, gollum:1, joker:1, buzz:1 } },
+          { text: 'Sıra dışı/garip', points: { gollum:2, forrest:2, buzz:2, jules:2, amelie:2, shrek:2, joker:1, johnwick:1, vitocorleone:1, elsa:1 } }
+        ]
+      },
+      {
+        q: 'En çok hangi ortamda kahraman olurdun?',
+        options: [
+          { text: 'Şehirde', points: { spiderman:2, batman:2, ironman:2, joker:2, johnwick:2, bond:2, superman:1, blackpanther:1, jules:1, vitocorleone:1 } },
+          { text: 'Uzayda', points: { vader:2, leia:2, yoda:2, superman:2, buzz:2, martymcfly:2, joker:1, johnwick:1, elsa:1, shrek:1 } },
+          { text: 'Ormanda/doğada', points: { indiana:2, legolas:2, katniss:2, shrek:2, gollum:2, blackpanther:2, forrest:1, elsa:1, wonder:1, rocky:1 } },
+          { text: 'Okulda', points: { hermione:2, forrest:2, amelie:2, elsa:2, vitocorleone:2, jules:2, joker:1, johnwick:1, shrek:1, batman:1 } },
+          { text: 'Denizde/gemide', points: { jack:2, jules:2, shrek:2, wonder:2, superman:2, bond:2, joker:1, johnwick:1, elsa:1, gollum:1 } },
+          { text: 'Ringde/arenada', points: { rocky:2, thanos:2, johnwick:2, batman:2, blackpanther:2, katniss:2, joker:1, indiana:1, shrek:1, jack:1 } }
+        ]
+      }
+    ];
+    const results = {
+      spiderman: {
+        name: 'Spider-Man',
+        desc: 'Sen tam bir Spider-Man’sin! Cesur, yardımsever ve maceraperestsin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/3/3c/Spider-Man_%28film%29.png',
+        quote: 'Büyük güç, büyük sorumluluk getirir.'
+      },
+      batman: {
+        name: 'Batman',
+        desc: 'Sen tam bir Batman’sin! Karanlık, zeki ve adalet peşindesin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/8/8a/Batman_dark_knight.jpg',
+        quote: 'I’m Batman.'
+      },
+      johnwick: {
+        name: 'John Wick',
+        desc: 'Sen tam bir John Wick’sin! Güçlü, kararlı ve savaşçı birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/a/a1/John_Wick_Chapter_4_Poster.jpg',
+        quote: 'I’m not a killer. I’m a retired hitman.'
+      },
+      wonder: {
+        name: 'Wonder Woman',
+        desc: 'Sen tam bir Wonder Woman’sın! Güçlü, adaletli ve ilham verici birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/8/8c/Wonder_Woman_2017_poster.jpg',
+        quote: 'Gerçek güç, inançtan gelir.'
+      },
+      blackpanther: {
+        name: 'Black Panther',
+        desc: 'Sen tam bir Black Panther’sin! Onurlu, lider ve topluma bağlı birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/9/9f/Black_Panther_film_poster.jpg',
+        quote: 'Wakanda forever!'
+      },
+      leia: {
+        name: 'Princess Leia',
+        desc: 'Sen tam bir Princess Leia’sın! Zeki, lider ve adaletli birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/d/d3/Princess_Leia_poster.jpg',
+        quote: 'Help me, Obi-Wan Kenobi. You’re my only hope.'
+      },
+      hermione: {
+        name: 'Hermione Granger',
+        desc: 'Sen tam bir Hermione’sin! Zeki, çalışkan ve lider ruhlusun.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/d/d3/Hermione_Granger_poster.jpg',
+        quote: 'Korkmak yerine, harekete geçmek gerekir.'
+      },
+      ironman: {
+        name: 'Iron Man',
+        desc: 'Sen tam bir Iron Man’sin! Zeki, esprili ve teknoloji tutkunu birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/e/e0/Iron_Man_poster.jpg',
+        quote: 'I am Iron Man.'
+      },
+      elsa: {
+        name: 'Elsa',
+        desc: 'Sen tam bir Elsa’sın! Güçlü, duygusal ve özgür ruhlusun.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/7/7e/Frozen_film_poster.jpg',
+        quote: 'Let it go!'
+      },
+      yoda: {
+        name: 'Yoda',
+        desc: 'Sen tam bir Yoda’sın! Bilge, sabırlı ve derin düşüncelisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/9/9b/Yoda_Empire_Strikes_Back.png',
+        quote: 'Do or do not. There is no try.'
+      },
+      bond: {
+        name: 'James Bond',
+        desc: 'Sen tam bir James Bond’sun! Karizmatik, cesur ve maceraperestsin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/6/6e/James_Bond_007_logo.png',
+        quote: 'The name’s Bond. James Bond.'
+      },
+      rocky: {
+        name: 'Rocky Balboa',
+        desc: 'Sen tam bir Rocky’sin! Azimli, mücadeleci ve asla pes etmeyen birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/4/4b/Rocky_film_poster.jpg',
+        quote: 'It ain’t about how hard you hit. It’s about how hard you can get hit and keep moving forward.'
+      },
+      indiana: {
+        name: 'Indiana Jones',
+        desc: 'Sen tam bir Indiana Jones’sun! Maceracı, zeki ve cesur birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/2/2c/Indiana_Jones_ve_Kader_Kadrani.jpg',
+        quote: 'It’s not the years, honey. It’s the mileage.'
+      },
+      gollum: {
+        name: 'Gollum',
+        desc: 'Sen tam bir Gollum’sun! Takıntılı, gizemli ve sıra dışı birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/9/9b/Gollum.png',
+        quote: 'My precious!'
+      },
+      jack: {
+        name: 'Jack Sparrow',
+        desc: 'Sen tam bir Jack Sparrow’sun! Maceracı, esprili ve özgür ruhlusun.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/7/7e/Jack_Sparrow_karakteri.png',
+        quote: 'Why is the rum always gone?'
+      },
+      superman: {
+        name: 'Superman',
+        desc: 'Sen tam bir Superman’sin! Güçlü, adaletli ve yardımsever birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/3/35/Superman_film_poster.jpg',
+        quote: 'Up, up and away!'
+      },
+      thanos: {
+        name: 'Thanos',
+        desc: 'Sen tam bir Thanos’sun! Güçlü, kararlı ve evrenin dengesini önemseyen birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/7/7e/Thanos_Endgame.png',
+        quote: 'I am inevitable.'
+      },
+      amelie: {
+        name: 'Amélie Poulain',
+        desc: 'Sen tam bir Amélie’sin! Hayalperest, iyimser ve romantik birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/5/53/Amelie_film_poster.jpg',
+        quote: 'Les temps sont durs pour les rêveurs.'
+      },
+      deadpool: {
+        name: 'Deadpool',
+        desc: 'Sen tam bir Deadpool’sun! Mizahın ve enerjinle ortamın neşesisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/0/0c/Deadpool_film_poster.png',
+        quote: 'Deli olabilirim ama aptal değilim.'
+      },
+      shrek: {
+        name: 'Shrek',
+        desc: 'Sen tam bir Shrek’sin! Sıra dışı, eğlenceli ve içten birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/6/6a/Shrek.jpg',
+        quote: 'I’m an ogre! You know, "Grab your torch and pitchforks!"'
+      },
+      martymcfly: {
+        name: 'Marty McFly',
+        desc: 'Sen tam bir Marty McFly’sin! Zeki, güçlü ve zamanda yolculuk yapan birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/a/a1/Marty_McFly_Back_to_the_Future.jpg',
+        quote: 'I’m not crazy. I’m a scientist.'
+      },
+      jules: {
+        name: 'Jules Winnfield',
+        desc: 'Sen tam bir Jules Winnfield’sin! Güçlü, kararlı ve savaşçı birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/a/a1/Jules_Winnfield_Pulp_Fiction.jpg',
+        quote: 'I’m not a killer. I’m a retired hitman.'
+      },
+      vitocorleone: {
+        name: 'Vito Corleone',
+        desc: 'Sen tam bir Vito Corleone’sin! Zeki, lider ve adaletli birisin.',
+        img: 'https://upload.wikimedia.org/wikipedia/tr/d/d3/Vito_Corleone_The_Godfather.jpg',
+        quote: 'I’m not a killer. I’m a businessman.'
+      }
+    };
+    let current = 0;
+    let answers = [];
+    let points = { spiderman: 0, batman: 0, johnwick: 0, indiana: 0, rocky: 0, wonder: 0, deadpool: 0, shrek: 0, amelie: 0, buzz: 0, forrest: 0, jack: 0, neo: 0, yoda: 0, elsa: 0, ironman: 0, martymcfly: 0, legolas: 0, joker: 0, myers: 0, gollum: 0, thanos: 0, vader: 0, bond: 0, leia: 0, hermione: 0, blackpanther: 0, superman: 0, jules: 0, vitocorleone: 0 };
+    const quizArea = document.getElementById('quiz-area');
+    const nextBtn = document.getElementById('next-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const homeBtn = document.getElementById('home-btn');
+    const progress = document.getElementById('progress');
+
+    function showQuestion(idx) {
+      const q = questions[idx];
+      quizArea.innerHTML = `<div class='question' style='opacity:0;animation:fadeIn 0.5s forwards;'>${q.q}</div><div class='options'></div>`;
+      const optionsDiv = quizArea.querySelector('.options');
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt.text;
+        btn.onclick = function() {
+          document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          answers[idx] = i;
+          nextBtn.disabled = false;
+        };
+        optionsDiv.appendChild(btn);
+      });
+      nextBtn.style.display = 'inline-block';
+      nextBtn.disabled = true;
+      restartBtn.style.display = 'none';
+      homeBtn.style.display = 'none';
+      // İlerleme barı
+      progress.style.width = ((idx+1)/questions.length*100) + '%';
+    }
+
+    function showResult() {
+      // Puanları sıfırla
+      points = { spiderman: 0, batman: 0, johnwick: 0, indiana: 0, rocky: 0, wonder: 0, deadpool: 0, shrek: 0, amelie: 0, buzz: 0, forrest: 0, jack: 0, neo: 0, yoda: 0, elsa: 0, ironman: 0, martymcfly: 0, legolas: 0, joker: 0, myers: 0, gollum: 0, thanos: 0, vader: 0, bond: 0, leia: 0, hermione: 0, blackpanther: 0, superman: 0, jules: 0, vitocorleone: 0 };
+      // Her cevaba göre puanları topla
+      questions.forEach((q, idx) => {
+        const ansIdx = answers[idx];
+        if (typeof ansIdx === 'number') {
+          const optPoints = q.options[ansIdx].points;
+          for (let k in optPoints) {
+            points[k] += optPoints[k];
+          }
+        }
+      });
+      // En yüksek 3 karakteri bul
+      const sorted = Object.entries(points).sort((a,b) => b[1]-a[1]);
+      const top3 = sorted.slice(0,3);
+      quizArea.innerHTML = `<div class='result'>
+        ${top3.map(([key, val], idx) => {
+          const res = results[key];
+          return `
+            <div style='margin-bottom:18px;${idx===0?"background:#2a3d1a;padding:12px 8px;border-radius:12px;box-shadow:0 2px 8px #BFFF0030;":""}'>
+              <img src='${res.img}' alt='${res.name}'>
+              <div class='char-name'>${res.name} ${idx===0?'<span style=\'color:#BFFF00;font-size:0.9em;\'>(Senin karakterin!)</span>':''}</div>
+              <div class='char-desc'>${res.desc}</div>
+              <div class='char-quote'>"${res.quote}"</div>
+              <div style='color:#BFFF00;font-size:1.1em;font-weight:bold;'>Puan: ${val}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>`;
+      nextBtn.style.display = 'none';
+      restartBtn.style.display = 'inline-block';
+      homeBtn.style.display = 'inline-block';
+      progress.style.width = '100%';
+    }
+
+    nextBtn.onclick = function() {
+      if (current < questions.length - 1) {
+        current++;
+        showQuestion(current);
+      } else {
+        showResult();
+      }
+    };
+    restartBtn.onclick = function() {
+      current = 0;
+      answers = [];
+      showQuestion(current);
+    };
+    homeBtn.onclick = function() {
+      window.location.href = 'index.html';
+    };
+    // Başlat
+    showQuestion(current);
+  </script>
+</body>
+</html> 
