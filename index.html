@@ -9,92 +9,159 @@
     <title>Film Öneri Sitesi</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body {
+            body {
             font-family: 'Poppins', Arial, sans-serif;
-            background: #181818;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 50%, #2d1b3d 100%);
             color: #fff;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            min-height: 100vh;
         }
         .container, .film-bubble {
-            background: #1e3f1a;
-            box-shadow: 0 4px 24px rgba(124,252,0,0.18);
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d1b3d 100%);
+            box-shadow: 0 4px 24px rgba(64,224,208,0.15);
             border: none;
         }
         .container {
             max-width: 500px;
             margin: 60px auto 0 auto;
-            border-radius: 16px;
-            padding: 32px 24px 24px 24px;
+            border-radius: 20px;
+            padding: 40px 32px 32px 32px;
             text-align: center;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d1b3d 100%);
+            box-shadow: 0 20px 40px rgba(64,224,208,0.15), 0 8px 16px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(64,224,208,0.2);
         }
         h1 {
-            margin-bottom: 24px;
-            font-size: 2.2rem;
-            letter-spacing: 1px;
+            margin-bottom: 32px;
+            font-size: 2.4rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #40E0D0, #00CED1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(64,224,208,0.3);
         }
         .film-form {
-            margin-bottom: 24px;
-            background: transparent;
-            border-radius: 0;
-            padding: 0;
-            border: none;
+            margin-bottom: 32px;
+            background: rgba(64,224,208,0.05);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(64,224,208,0.2);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 16px rgba(64,224,208,0.1);
         }
         select, input[type="text"] {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid #BFFF00;
-            margin-right: 8px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid rgba(64,224,208,0.3);
+            margin-right: 12px;
             font-size: 1rem;
-            background: #193d1a;
+            background: rgba(30,30,46,0.8);
             color: #fff;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #40E0D0;
+            box-shadow: 0 0 0 3px rgba(64,224,208,0.2);
+            transform: translateY(-2px);
         }
         button {
-            padding: 8px 18px;
-            border-radius: 6px;
+            padding: 12px 24px;
+            border-radius: 12px;
             border: none;
-            background: linear-gradient(90deg,#7CFC00 60%,#BFFF00 100%);
-            color: #fff;
+            background: linear-gradient(135deg, #40E0D0 0%, #00CED1 100%);
+            color: #1e1e2e;
             font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(64,224,208,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
         }
         button:hover {
-            background: #7CFC00;
+            background: linear-gradient(135deg, #00CED1 0%, #40E0D0 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(64,224,208,0.4);
         }
         .film-card {
             display: none;
-            background: #2a3d1a;
-            border-radius: 12px;
-            padding: 18px;
-            margin-top: 18px;
+            background: linear-gradient(135deg, #2d1b3d 0%, #3d2b4d 100%);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 24px;
             text-align: left;
             overflow: visible;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 8px 16px rgba(64,224,208,0.1);
+            border: 1px solid rgba(64,224,208,0.2);
+            backdrop-filter: blur(10px);
         }
         .film-card img {
             float: left;
-            width: 90px;
-            height: 130px;
+            width: 100px;
+            height: 150px;
             object-fit: cover;
-            border-radius: 8px;
-            margin-right: 18px;
+            border-radius: 16px;
+            margin-right: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .film-card img:hover {
+            transform: scale(1.05);
         }
         .film-card h2 {
-            margin: 0 0 8px 0;
-            font-size: 1.3rem;
-            color: #fff;
+            margin: 0 0 12px 0;
+            font-size: 1.4rem;
+            color: #40E0D0;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         .film-card p {
-            margin: 4px 0;
+            margin: 6px 0;
             max-height: none !important;
             overflow: visible !important;
+            line-height: 1.6;
+            font-size: 0.95rem;
         }
         .film-card strong {
-            color: #fff;
+            color: #40E0D0;
+            font-weight: 600;
         }
         .film-card a {
-            color: #7CFC00;
+            color: #00CED1;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .film-card a:hover {
+            color: #40E0D0;
+            text-shadow: 0 0 8px rgba(64,224,208,0.5);
         }
         /* Film balonu */
         .film-bubble {
@@ -104,17 +171,17 @@
             width: 70px;
             height: 70px;
             border-radius: 18px;
-            box-shadow: 0 2px 12px rgba(124,252,0,0.18);
+            box-shadow: 0 2px 12px rgba(64,224,208,0.18);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 1000;
             transition: background 0.2s;
-            border: 3px solid #7CFC00;
+            border: 3px solid #40E0D0;
         }
         .film-bubble:hover {    
-            background: #BFFF00;
+            background: #00CED1;
         }
         .film-bubble img {
             width: 48px;
@@ -136,11 +203,11 @@
             bottom: 16px;
             width: 220px;
             max-width: 90vw;
-            background: rgba(124,252,0,0.18);
-            border: 1.5px solid #7CFC00;
+            background: rgba(64,224,208,0.18);
+            border: 1.5px solid #40E0D0;
             backdrop-filter: blur(8px) saturate(1.2);
             border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(124,252,0,0.18);
+            box-shadow: 0 8px 32px 0 rgba(64,224,208,0.18);
             padding: 18px 14px 18px 14px;
             z-index: 10;
             text-align: left;
@@ -228,6 +295,7 @@
             #search-area input {
                 min-width: 120px !important;
             }
+
             /* Fragman arka planını gizle */
             .background-video { display: none !important; }
             /* Buton konumlarını değiştir */
@@ -249,7 +317,34 @@
                 top: 2vw !important;
                 bottom: auto !important;
             }
+            
+
+
             .background-poster { display: none !important; }
+            
+            #toggle-lists {
+                left: 2vw !important;
+                right: auto !important;
+                bottom: 2vw !important;
+                top: auto !important;
+            }
+            #lists-box {
+                left: 1vw !important;
+                right: 1vw !important;
+                width: 98vw !important;
+                max-width: 98vw !important;
+                bottom: 1vw !important;
+                top: auto !important;
+            }
+            
+            /* Scrollbar'ı gizle */
+            #lists-box::-webkit-scrollbar {
+                display: none !important;
+            }
+            #lists-box {
+                -ms-overflow-style: none !important;
+                scrollbar-width: none !important;
+            }
         }
         @media (max-width: 400px) {
             .container {
@@ -315,6 +410,15 @@
         button:hover {
             box-shadow: 0 4px 18px 0 #BFFF0070, 0 1.5px 8px #7CFC0040;
             transform: scale(1.07);
+        }
+        
+        /* Scrollbar'ı gizle */
+        #lists-box::-webkit-scrollbar {
+            display: none;
+        }
+        #lists-box {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
     <style>
@@ -415,10 +519,10 @@
     <style>
     @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
     </style>
-    <!-- Bugünün Filmi Butonu ve Kartı (container'dan önce) -->
+    <!-- Haftanın Filmi Butonu ve Kartı (container'dan önce) -->
     <div id="daily-film-toggle-wrapper" style="max-width:500px;margin:24px auto 0 auto;">
-      <button id="daily-film-toggle-btn" style="display:none;width:100%;padding:12px 0;background:#BFFF00;color:#193d1a;font-size:1.1em;font-weight:bold;border:none;border-radius:12px;box-shadow:0 2px 8px #BFFF0030;cursor:pointer;transition:background 0.2s;">Bugünün Filmi</button>
-      <div id="daily-film" class="closed" style="background:#1e3f1a;border-radius:16px;box-shadow:0 4px 24px rgba(124,252,0,0.18);padding:18px 18px 12px 18px;margin-top:8px;">
+      <button id="daily-film-toggle-btn" style="width:100%;padding:12px 0;background:linear-gradient(135deg, #40E0D0 0%, #00CED1 100%);color:#1e1e2e;font-size:1.1em;font-weight:bold;border:none;border-radius:12px;box-shadow:0 2px 8px rgba(64,224,208,0.3);cursor:pointer;transition:background 0.2s;">Haftanın Filmi</button>
+              <div id="daily-film" class="closed" style="background:linear-gradient(135deg, #2d1b3d 0%, #3d2b4d 100%);border-radius:16px;box-shadow:0 4px 24px rgba(64,224,208,0.18);padding:18px 18px 12px 18px;margin-top:8px;">
         <div id="daily-film-card"></div>
       </div>
     </div>
@@ -482,6 +586,23 @@
         <ul id="recent-list" style="list-style:none;padding:0;margin:0;"></ul>
     </div>
     <button id="toggle-recent" title="Son öneriler kutusunu aç/kapat">⇅</button>
+    
+    <!-- Film Listeleri Kutusu -->
+    <div id="lists-box" style="position:fixed;left:24px;bottom:24px;z-index:1200;background:#1a1a2eee;border:2px solid #9c27b0;border-radius:14px;padding:14px 18px;min-width:200px;max-width:280px;max-height:50vh;overflow-y:auto;overflow-x:hidden;box-shadow:0 2px 12px #9c27b040;display:none;scrollbar-width:none;-ms-overflow-style:none;">
+        <div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;'>
+            <h3 style='margin:0;font-size:1.1em;color:#e1bee7;'>Film Listelerim</h3>
+            <button id="close-lists" style='background:#9c27b0;color:#fff;border:none;border-radius:8px;padding:4px 10px;font-size:1em;cursor:pointer;box-shadow:0 2px 8px #9c27b040;'>✕</button>
+        </div>
+        <div id="lists-container">
+            <div id="create-list-section" style="margin-bottom:12px;">
+                <input id="new-list-name" type="text" placeholder="Liste adı..." style="padding:6px 10px;border-radius:6px;border:1px solid #9c27b0;background:#2a1a2a;color:#fff;font-size:0.9em;width:100%;margin-bottom:8px;">
+                <button id="create-list-btn" style="background:#9c27b0;color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:0.9em;cursor:pointer;width:100%;">Yeni Liste Oluştur</button>
+            </div>
+            <div id="lists-list"></div>
+        </div>
+    </div>
+    <button id="toggle-lists" style="position:fixed;left:24px;bottom:24px;z-index:1300;background:#9c27b0;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:1em;cursor:pointer;box-shadow:0 2px 8px #9c27b040;">📋</button>
+    
     <div class="film-bubble" id="film-bubble" title="Rastgele Film Öner!">
         <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Alea_1.png" alt="Beyaz Zar">
   </div>
@@ -757,6 +878,8 @@
                     ${(film.imdbID && film.imdbID !== '') ? `<a href=\"https://www.imdb.com/title/${film.imdbID}\" target=\"_blank\" style=\"display:inline-block;margin:8px auto 0 auto;padding:7px 18px;background:#e53935;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:1em;box-shadow:0 2px 8px rgba(229,57,53,0.10);transition:background 0.2s;\">IMDB'de Gör</a>` : ''}
                     <button class='fav-btn' data-imdbid='${film.imdbID}' style='margin-top:10px;background:#43a047;color:#fff;border:none;border-radius:8px;padding:7px 18px;font-size:1em;cursor:pointer;font-weight:bold;box-shadow:0 2px 8px #43a04740;'>Favorilere Ekle</button>
                     <button class='dislike-btn' data-imdbid='${film.imdbID}' style='margin-top:10px;background:#e53935;color:#fff;border:none;border-radius:8px;padding:7px 18px;font-size:1em;cursor:pointer;font-weight:bold;box-shadow:0 2px 8px #e5393540;'>Beğenmedim</button>
+                    <button class='add-to-list-btn' data-imdbid='${film.imdbID}' style='margin-top:10px;background:#9c27b0;color:#fff;border:none;border-radius:8px;padding:7px 18px;font-size:1em;cursor:pointer;font-weight:bold;box-shadow:0 2px 8px #9c27b040;'>📋 Listeye Ekle</button>
+
                     <div style='margin-top:12px;margin-bottom:2px;width:100%;display:flex;justify-content:center;'>
                         <div style='background:#181818e0;color:#BFFF00;border-radius:10px;padding:8px 16px;font-size:0.98em;box-shadow:0 2px 8px #BFFF0030;max-width:90%;text-align:center;'>
                             <span>🎬 ${triviaList[Math.floor(Math.random()*triviaList.length)]}</span>
@@ -916,6 +1039,88 @@
                 tmdbID: film.id
             }));
         }
+
+        
+        // Favorilere ekle event
+        setTimeout(() => {
+            document.querySelectorAll('.add-fav-search').forEach(btn => {
+                btn.onclick = async function() {
+                    const tmdbID = btn.getAttribute('data-tmdbid');
+                    // Film detayını çek
+                    const detailUrl = `${TMDB_API_URL}/movie/${tmdbID}?api_key=${TMDB_API_KEY}&language=tr-TR`;
+                    const detailRes = await fetch(detailUrl);
+                    const detailData = await detailRes.json();
+                    // IMDB id'sini çek
+                    let imdbID = '';
+                    try {
+                        const extUrl = `${TMDB_API_URL}/movie/${tmdbID}/external_ids?api_key=${TMDB_API_KEY}`;
+                        const extRes = await fetch(extUrl);
+                        const extData = await extRes.json();
+                        imdbID = extData.imdb_id || '';
+                    } catch (e) {}
+                    const film = {
+                        Title: detailData.title,
+                        Year: detailData.release_date ? detailData.release_date.substring(0,4) : '',
+                        Genre: detailData.genres ? detailData.genres.map(g => g.name).join(', ') : '',
+                        imdbRating: detailData.vote_average,
+                        Plot: detailData.overview,
+                        Poster: detailData.poster_path ? `https://image.tmdb.org/t/p/w500${detailData.poster_path}` : 'maxresdefault.jpg',
+                        imdbID: imdbID,
+                        trailerKey: '',
+                        tmdbID: tmdbID
+                    };
+                    addFavorite(film);
+                    btn.textContent = 'Favorilere Eklendi';
+                    btn.disabled = true;
+                };
+            });
+            // Detayları Gör butonuna event
+            document.querySelectorAll('.show-detail-search').forEach(btn => {
+                btn.onclick = async function() {
+                    const tmdbID = btn.getAttribute('data-tmdbid');
+                    const detailUrl = `${TMDB_API_URL}/movie/${tmdbID}?api_key=${TMDB_API_KEY}&language=tr-TR`;
+                    const detailRes = await fetch(detailUrl);
+                    const detailData = await detailRes.json();
+                    // IMDB id'sini çek
+                    let imdbID = '';
+                    try {
+                        const extUrl = `${TMDB_API_URL}/movie/${tmdbID}/external_ids?api_key=${TMDB_API_KEY}`;
+                        const extRes = await fetch(extUrl);
+                        const extData = await extRes.json();
+                        imdbID = extData.imdb_id || '';
+                    } catch (e) {}
+                    // Fragman anahtarını çek
+                    let trailerKey = '';
+                    try {
+                        const vidUrl = `${TMDB_API_URL}/movie/${tmdbID}/videos?api_key=${TMDB_API_KEY}&language=tr-TR`;
+                        const vidRes = await fetch(vidUrl);
+                        const vidData = await vidRes.json();
+                        if (vidData.results && vidData.results.length > 0) {
+                            const trailer = vidData.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+                            if (trailer) trailerKey = trailer.key;
+                        }
+                    } catch (e) {}
+                    // Detay kartını oluştur
+                    const detailCard = `
+                        <div style='background:#2a3d1a;border-radius:16px;padding:18px;margin:18px auto;max-width:420px;box-shadow:0 2px 12px #BFFF0030;'>
+                            <img src='${detailData.poster_path ? `https://image.tmdb.org/t/p/w500${detailData.poster_path}` : 'maxresdefault.jpg'}' alt='${detailData.title}' style='width:110px;height:160px;object-fit:cover;border-radius:12px;float:left;margin-right:18px;box-shadow:0 2px 12px #BFFF0030;'>
+                            <div style='overflow:hidden;'>
+                                <h2 style='margin:0 0 8px 0;font-size:1.2rem;font-weight:700;color:#BFFF00;'>${detailData.title} <span style='font-weight:400;color:#fff;'>(${detailData.release_date ? detailData.release_date.substring(0,4) : ''})</span></h2>
+                                <p style='color:#ffcdd2;margin:0 0 4px 0;'><strong>Tür:</strong> ${detailData.genres ? detailData.genres.map(g => g.name).join(', ') : ''}</p>
+                                <p style='color:#fff;margin:0 0 4px 0;'><strong>IMDb:</strong> <span style='color:#e53935;'>${detailData.vote_average}</span></p>
+                                <p style='color:#ffeaea;margin:0 0 8px 0;line-height:1.35;'>${detailData.overview}</p>
+                                ${(imdbID && imdbID !== '') ? `<a href='https://www.imdb.com/title/${imdbID}' target='_blank' style='display:inline-block;margin:8px 0 0 0;padding:7px 18px;background:#e53935;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:1em;box-shadow:0 2px 8px #e5393510;transition:background 0.2s;'>IMDb'de Gör</a>` : ''}
+                                ${trailerKey ? `<div style='margin-top:10px;'><iframe width='320' height='180' src='https://www.youtube.com/embed/${trailerKey}' frameborder='0' allowfullscreen style='border-radius:10px;'></iframe></div>` : ''}
+                            </div>
+                            <div style='clear:both;'></div>
+                        </div>
+                    `;
+                    // Sonucu göster
+                    document.getElementById('search-results').innerHTML = detailCard;
+                };
+            });
+        }, 100);
+        
         // Arama butonu event
         document.getElementById('search-btn').onclick = async function() {
             const q = document.getElementById('search-input').value.trim();
@@ -1117,7 +1322,217 @@
                     alert('Beğenmediklerim temizlendi!');
                 };
             }
+            
+            // Enter tuşu ile arama
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        document.getElementById('search-btn').click();
+                    }
+                });
+            }
+            
+            // Film listeleri event'leri
+            const createBtn = document.getElementById('create-list-btn');
+            const newListInput = document.getElementById('new-list-name');
+            
+            if (createBtn && newListInput) {
+                createBtn.onclick = function() {
+                    const name = newListInput.value.trim();
+                    if (!name) {
+                        alert('Lütfen liste adı girin!');
+                        return;
+                    }
+                    createFilmList(name);
+                    newListInput.value = '';
+                };
+                
+                newListInput.onkeypress = function(e) {
+                    if (e.key === 'Enter') {
+                        createBtn.click();
+                    }
+                };
+            }
+            
+            // Liste kutusu toggle
+            const listsBox = document.getElementById('lists-box');
+            const toggleListsBtn = document.getElementById('toggle-lists');
+            const closeListsBtn = document.getElementById('close-lists');
+            
+            if (toggleListsBtn && listsBox) {
+                toggleListsBtn.onclick = function() {
+                    showFilmLists();
+                    listsBox.style.display = 'block';
+                    toggleListsBtn.style.display = 'none';
+                };
+            }
+            
+            if (closeListsBtn && listsBox) {
+                closeListsBtn.onclick = function() {
+                    listsBox.style.display = 'none';
+                    toggleListsBtn.style.display = 'block';
+                };
+            }
         });
+  </script>
+  <script>
+    // Film Listeleri Sistemi
+    function getFilmLists() {
+        return JSON.parse(localStorage.getItem('filmLists') || '[]');
+    }
+    
+    function saveFilmLists(lists) {
+        localStorage.setItem('filmLists', JSON.stringify(lists));
+    }
+    
+    function createFilmList(name) {
+        const lists = getFilmLists();
+        const newList = {
+            id: Date.now().toString(),
+            name: name,
+            films: [],
+            createdAt: new Date().toISOString()
+        };
+        lists.push(newList);
+        saveFilmLists(lists);
+        showFilmLists();
+        return newList;
+    }
+    
+    function addFilmToList(listId, film) {
+        const lists = getFilmLists();
+        const list = lists.find(l => l.id === listId);
+        if (!list) return false;
+        
+        // Film zaten listede mi kontrol et
+        if (list.films.some(f => f.imdbID === film.imdbID)) {
+            alert('Bu film zaten listede!');
+            return false;
+        }
+        
+        list.films.push(film);
+        saveFilmLists(lists);
+        showFilmLists();
+        return true;
+    }
+    
+    function removeFilmFromList(listId, filmId) {
+        const lists = getFilmLists();
+        const list = lists.find(l => l.id === listId);
+        if (!list) return;
+        
+        list.films = list.films.filter(f => f.imdbID !== filmId);
+        saveFilmLists(lists);
+        showFilmLists();
+    }
+    
+    function deleteFilmList(listId) {
+        const lists = getFilmLists();
+        const filteredLists = lists.filter(l => l.id !== listId);
+        saveFilmLists(filteredLists);
+        showFilmLists();
+    }
+    
+    function showFilmLists() {
+        const lists = getFilmLists();
+        const container = document.getElementById('lists-list');
+        
+        if (lists.length === 0) {
+            container.innerHTML = '<div style="color:#e1bee7;text-align:center;font-size:0.9em;">Henüz liste yok.</div>';
+            return;
+        }
+        
+        container.innerHTML = lists.map(list => `
+            <div class="film-list-item" style="margin-bottom:12px;background:#2a1a2a;border-radius:8px;padding:10px;border:1px solid #9c27b0;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <h4 style="margin:0;color:#e1bee7;font-size:1em;">${list.name}</h4>
+                    <div>
+                        <button onclick="deleteFilmList('${list.id}')" style="background:#e53935;color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:0.8em;cursor:pointer;">Sil</button>
+                    </div>
+                </div>
+                <div style="font-size:0.85em;color:#b39ddb;margin-bottom:8px;">
+                    ${list.films.length} film
+                </div>
+                <div class="list-films" style="max-height:120px;overflow-y:auto;">
+                    ${list.films.map(film => `
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;padding:4px;background:#1a1a2a;border-radius:4px;">
+                            <span style="color:#fff;font-size:0.85em;">${film.Title}</span>
+                            <button onclick="removeFilmFromList('${list.id}', '${film.imdbID}')" style="background:#e53935;color:#fff;border:none;border-radius:3px;padding:1px 4px;font-size:0.7em;cursor:pointer;">×</button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Film kartlarındaki "Listeye Ekle" butonlarına event ekle
+    function addListButtonEvents() {
+        document.querySelectorAll('.add-to-list-btn').forEach((btn, idx) => {
+            btn.onclick = function() {
+                const film = window.currentFilms ? window.currentFilms[idx] : null;
+                if (!film) return;
+                
+                const lists = getFilmLists();
+                if (lists.length === 0) {
+                    const listName = prompt('Yeni liste adı girin:');
+                    if (listName && listName.trim()) {
+                        const newList = createFilmList(listName.trim());
+                        addFilmToList(newList.id, film);
+                        alert('Film listeye eklendi!');
+                    }
+                } else {
+                    // Liste seçme modalı
+                    const listOptions = lists.map(list => 
+                        `<option value="${list.id}">${list.name} (${list.films.length} film)</option>`
+                    ).join('');
+                    
+                    const selectHtml = `
+                        <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;">
+                            <div style="background:#2a1a2a;border:2px solid #9c27b0;border-radius:12px;padding:20px;max-width:300px;width:90%;">
+                                <h3 style="margin:0 0 16px 0;color:#e1bee7;">Liste Seçin</h3>
+                                <select id="list-select" style="width:100%;padding:8px;border-radius:6px;border:1px solid #9c27b0;background:#1a1a2a;color:#fff;margin-bottom:16px;">
+                                    ${listOptions}
+                                </select>
+                                <div style="display:flex;gap:8px;">
+                                    <button onclick="addFilmToSelectedList('${film.imdbID}')" style="background:#9c27b0;color:#fff;border:none;border-radius:6px;padding:8px 16px;cursor:pointer;">Ekle</button>
+                                    <button onclick="closeListModal()" style="background:#666;color:#fff;border:none;border-radius:6px;padding:8px 16px;cursor:pointer;">İptal</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.insertAdjacentHTML('beforeend', selectHtml);
+                }
+            };
+        });
+    }
+    
+    // Global fonksiyonlar
+    window.addFilmToSelectedList = function(filmId) {
+        const select = document.getElementById('list-select');
+        if (select && select.value) {
+            const film = window.currentFilms ? window.currentFilms.find(f => f.imdbID === filmId) : null;
+            if (film) {
+                addFilmToList(select.value, film);
+                alert('Film listeye eklendi!');
+            }
+        }
+        closeListModal();
+    };
+    
+    window.closeListModal = function() {
+        const modal = document.querySelector('div[style*="z-index:9999"]');
+        if (modal) modal.remove();
+    };
+    
+    // Film kartları gösterildiğinde buton eventlerini ekle
+    const originalShowFilmCards = window.showFilmCards;
+    window.showFilmCards = function(films, lastGenre) {
+        window.currentFilms = films; // Global değişken
+        originalShowFilmCards(films, lastGenre);
+        setTimeout(addListButtonEvents, 100);
+    };
   </script>
   <script>
     // Tüm cihazlarda kutuları otomatik kapalı başlat
@@ -1125,9 +1540,14 @@
         var favBox = document.getElementById('favorites-box');
         var recentBox = document.getElementById('recent-box');
         var dislikedBox = document.getElementById('disliked-box');
+        var listsBox = document.getElementById('lists-box');
+        var toggleListsBtn = document.getElementById('toggle-lists');
+        
         if (favBox) favBox.classList.add('closed');
         if (recentBox) recentBox.classList.add('closed');
         if (dislikedBox) dislikedBox.style.display = 'none';
+        if (listsBox) listsBox.style.display = 'none';
+        if (toggleListsBtn) toggleListsBtn.style.display = 'block';
     });
   </script>
   <script>
@@ -1188,26 +1608,29 @@
             btn.style.display = 'none';
             cardDiv.innerHTML = '';
             weeklyDiv.classList.add('closed');
-            return;
         }
     }
+    // Haftanın filmi event'ini ana event listener'a ekle
     document.addEventListener('DOMContentLoaded', function() {
         showWeeklyFilm().then(() => {
             const btn = document.getElementById('daily-film-toggle-btn');
             const weeklyDiv = document.getElementById('daily-film');
-            btn.onclick = function(e) {
-                e.stopPropagation();
-                weeklyDiv.classList.toggle('closed');
-            };
-            document.addEventListener('click', function(e) {
-                if (!weeklyDiv.classList.contains('closed')) {
-                    if (!weeklyDiv.contains(e.target) && e.target !== btn) {
-                        weeklyDiv.classList.add('closed');
+            if (btn && weeklyDiv) {
+                btn.onclick = function(e) {
+                    e.stopPropagation();
+                    weeklyDiv.classList.toggle('closed');
+                };
+                document.addEventListener('click', function(e) {
+                    if (!weeklyDiv.classList.contains('closed')) {
+                        if (!weeklyDiv.contains(e.target) && e.target !== btn) {
+                            weeklyDiv.classList.add('closed');
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     });
   </script>
+
 </body>
 </html>

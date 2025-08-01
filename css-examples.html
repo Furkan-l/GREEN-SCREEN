@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Örnekleri ve Pratikler</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .example-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .example-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        .demo-box {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #f8f9fa;
+        }
+
+        .flex-demo {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .flex-item {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .grid-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .grid-item {
+            background: #764ba2;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .animation-demo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .hover-demo {
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hover-demo:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .responsive-demo {
+            background: #feca57;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .responsive-demo {
+                background: #ff6b6b;
+                color: white;
+            }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-success {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .gradient-demo {
+            height: 100px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .gradient-1 {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .gradient-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .gradient-3 {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .shadow-demo {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .shadow-1 {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .shadow-2 {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .shadow-3 {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .text-effects {
+            margin: 20px 0;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px #667eea;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .text-3d {
+            text-shadow: 2px 2px 0 #667eea, 4px 4px 0 #764ba2;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .text-gradient {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 CSS Örnekleri ve Pratikler</h1>
+            <p>CSS'in farklı özelliklerini keşfedin ve pratik yapın</p>
+        </div>
+
+        <!-- Flexbox Örnekleri -->
+        <div class="example-section">
+            <h2>📐 Flexbox Örnekleri</h2>
+            
+            <h3>Basit Flex Container</h3>
+            <div class="code-block">
+.container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+            </div>
+            <div class="demo-box">
+                <div class="flex-demo">
+                    <div class="flex-item">Öğe 1</div>
+                    <div class="flex-item">Öğe 2</div>
+                    <div class="flex-item">Öğe 3</div>
+                    <div class="flex-item">Öğe 4</div>
+                </div>
+            </div>
+
+            <h3>Flexbox Merkezleme</h3>
+            <div class="code-block">
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+            </div>
+            <div class="demo-box" style="height: 200px; display: flex; justify-content: center; align-items: center;">
+                <div class="flex-item">Ortalanmış İçerik</div>
+            </div>
+        </div>
+
+        <!-- Grid Örnekleri -->
+        <div class="example-section">
+            <h2>🔲 CSS Grid Örnekleri</h2>
+            
+            <h3>Responsive Grid</h3>
+            <div class="code-block">
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+            </div>
+            <div class="demo-box">
+                <div class="grid-demo">
+                    <div class="grid-item">Grid 1</div>
+                    <div class="grid-item">Grid 2</div>
+                    <div class="grid-item">Grid 3</div>
+                    <div class="grid-item">Grid 4</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Animasyon Örnekleri -->
+        <div class="example-section">
+            <h2>🎭 CSS Animasyonları</h2>
+            
+            <h3>Bounce Animasyonu</h3>
+            <div class="code-block">
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-30px);
+    }
+    60% {
+        transform: translateY(-15px);
+    }
+}
+
+.element {
+    animation: bounce 2s infinite;
+}
+            </div>
+            <div class="demo-box">
+                <div class="animation-demo"></div>
+            </div>
+
+            <h3>Hover Efektleri</h3>
+            <div class="code-block">
+.button {
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+            </div>
+            <div class="demo-box">
+                <div class="hover-demo">Hover Et</div>
+            </div>
+        </div>
+
+        <!-- Responsive Design -->
+        <div class="example-section">
+            <h2>📱 Responsive Design</h2>
+            
+            <h3>Media Query Örneği</h3>
+            <div class="code-block">
+@media (max-width: 768px) {
+    .element {
+        background: #ff6b6b;
+        color: white;
+    }
+}
+            </div>
+            <div class="demo-box">
+                <div class="responsive-demo">
+                    Bu kutu mobilde farklı renkte görünür
+                </div>
+            </div>
+        </div>
+
+        <!-- Buton Örnekleri -->
+        <div class="example-section">
+            <h2>🔘 Buton Stilleri</h2>
+            
+            <div class="button-group">
+                <button class="btn btn-primary">Primary</button>
+                <button class="btn btn-secondary">Secondary</button>
+                <button class="btn btn-success">Success</button>
+            </div>
+        </div>
+
+        <!-- Gradient Örnekleri -->
+        <div class="example-section">
+            <h2>🌈 Gradient Örnekleri</h2>
+            
+            <div class="gradient-demo gradient-1"></div>
+            <div class="gradient-demo gradient-2"></div>
+            <div class="gradient-demo gradient-3"></div>
+        </div>
+
+        <!-- Gölge Örnekleri -->
+        <div class="example-section">
+            <h2>🌫️ Box Shadow Örnekleri</h2>
+            
+            <div class="shadow-demo shadow-1">Hafif Gölge</div>
+            <div class="shadow-demo shadow-2">Orta Gölge</div>
+            <div class="shadow-demo shadow-3">Koyu Gölge</div>
+        </div>
+
+        <!-- Metin Efektleri -->
+        <div class="example-section">
+            <h2>✨ Metin Efektleri</h2>
+            
+            <div class="text-effects">
+                <div class="text-glow">Glow Efekti</div>
+                <div class="text-3d">3D Efekti</div>
+                <div class="text-gradient">Gradient Metin</div>
+            </div>
+        </div>
+
+        <!-- Kart Örnekleri -->
+        <div class="example-section">
+            <h2>🃏 Kart Tasarımları</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div class="card">
+                    <h3>Kart 1</h3>
+                    <p>Bu bir örnek karttır. Hover efekti ile yukarı hareket eder.</p>
+                </div>
+                <div class="card">
+                    <h3>Kart 2</h3>
+                    <p>Bu bir örnek karttır. Hover efekti ile yukarı hareket eder.</p>
+                </div>
+                <div class="card">
+                    <h3>Kart 3</h3>
+                    <p>Bu bir örnek karttır. Hover efekti ile yukarı hareket eder.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // İnteraktif özellikler ekleyebiliriz
+        document.addEventListener('DOMContentLoaded', function() {
+            // Kartlara tıklama efekti
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-5px)';
+                    }, 150);
+                });
+            });
+
+            // Butonlara tıklama efekti
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
